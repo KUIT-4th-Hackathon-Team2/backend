@@ -2,7 +2,6 @@ package com.konkukrent.demo.entity;
 
 import com.konkukrent.demo.entity.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.*;
 
 @Entity
@@ -19,18 +18,20 @@ public class User {
     private String name;
 
     @Column(nullable = false)
-    @Email
-    private String email;
+    private int studentNum;
+
+    @Column(nullable = false, length = 255)
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Builder
-    private User(String name, String email, Role role,
-                 String socialId) {
+    private User(String name, int studentNum, String password, Role role) {
         this.name = name;
-        this.email = email;
+        this.studentNum = studentNum;
+        this.password = password;
         this.role = role;
     }
 
