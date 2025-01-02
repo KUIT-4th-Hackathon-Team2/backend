@@ -63,6 +63,4 @@ public class UserService {
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
         return user;
     }
-
-    
 }
