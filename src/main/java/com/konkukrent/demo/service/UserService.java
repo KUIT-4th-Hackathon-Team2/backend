@@ -40,6 +40,7 @@ public class UserService {
                 .build();
     }
 
+    // TODO: 로그인 실패 시 오류 커스텀
     public LoginResponse validateUser(LoginRequest loginRequest) {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
@@ -49,7 +50,7 @@ public class UserService {
                         .studentNum(user.getStudentNum())
                         .role(String.valueOf(user.getRole()))
                         .build())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
     }
 
     /*public User findUserById(Long id) {
