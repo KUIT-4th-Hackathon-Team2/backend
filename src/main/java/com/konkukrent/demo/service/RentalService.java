@@ -3,26 +3,29 @@ package com.konkukrent.demo.service;
 import com.konkukrent.demo.dto.RentalDto.RentalRequestDto;
 import com.konkukrent.demo.dto.RentalDto.RentalResponseDto;
 import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
+import com.konkukrent.demo.entity.Product;
 import com.konkukrent.demo.entity.Rental;
+import com.konkukrent.demo.entity.User;
+import com.konkukrent.demo.repository.ProductRepository;
 import com.konkukrent.demo.repository.RentalRepository;
+import com.konkukrent.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// todo : expiration date 뒷부분 짜르는 형식 (?)
 @Service
+@RequiredArgsConstructor
 public class RentalService {
 
-    // todo : productRepository, userRepository 가져오기
     private final RentalRepository rentalRepository;
-
-    public RentalService(RentalRepository rentalRepository) {
-        this.rentalRepository = rentalRepository;
-    }
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     // 모든 대여 내역 조회
     @Transactional(readOnly = true)
@@ -40,18 +43,18 @@ public class RentalService {
     @Transactional
     public RentalResponseDto createRental(RentalRequestDto request){
 
-        // todo : product, user repository 에서 id로 객체 조회
-        // Product product;
-        // User user;
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + request.getProductId()));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + request.getUserId()));
 
         Rental rental = new Rental();
-        // rental.setProduct(product);
-        // rental.setUser(user);
+        rental.setProduct(product);
+        rental.setUser(user);
         rental.setRentalTime(LocalDateTime.now());
-
-        // todo : LocalDateTime.now() + product 의 rentalPeriod
-        // rental.setExpirationDate(LocalDateTime.now().plusSeconds());
+        rental.setExpirationDate(LocalDate.now().plusDays(product.getRentalPeriod()));
         Rental savedRental = rentalRepository.save(rental);
+
         return mapToResponseDTO(savedRental);
     }
 
@@ -63,16 +66,18 @@ public class RentalService {
 
     // getAllRentals 함수 내에서 객체 매핑
     private RentalResponseDto mapToResponseDTO(Rental rental) {
+
+        Product product = rental.getProduct();
+        User user = rental.getUser();
+
         RentalResponseDto dto = new RentalResponseDto();
+
         dto.setRentalId(rental.getRentalId());
-
-        // todo : product, user 연결
-        // dto.setProductId(rental.getProduct().getId());
-        // dto.setProductName(rental.getProduct().getName());
-        // dto.setUserId(rental.getUser().getId());
-        // dto.setUserName(rental.getUser().getName());
-        // dto.setStudentNum(rental.getUser().getStudentNum());
-
+        dto.setProductId(product.getId());
+        dto.setProductName(product.getName());
+        dto.setUserId(user.getId());
+        dto.setUserName(user.getName());
+        dto.setStudentNum(user.getStudentNum());
         dto.setRentalTime(rental.getRentalTime());
         dto.setExpirationDate(rental.getExpirationDate());
 
@@ -81,13 +86,14 @@ public class RentalService {
 
     // getRentalsByUserId 함수 내에서 객체 매핑
     private UserRentalResponseDto mapToUserRentalResponseDTO(Rental rental) {
+
+        Product product = rental.getProduct();
+
         UserRentalResponseDto dto = new UserRentalResponseDto();
+
         dto.setRentalId(rental.getRentalId());
-
-        // todo : product, user 연결
-        // dto.setProductId(rental.getProduct().getId());
-        // dto.setUserId(rental.getUser().getId());
-
+        dto.setProductId(product.getId());
+        dto.setProductName(product.getName());
         dto.setRentalTime(rental.getRentalTime());
         dto.setExpirationDate(rental.getExpirationDate());
 

@@ -5,6 +5,7 @@ import com.konkukrent.demo.dto.ProductDto.ProductResponseDto;
 import com.konkukrent.demo.dto.ProductDto.ProductUpdateRequestDto;
 import com.konkukrent.demo.entity.Product;
 import com.konkukrent.demo.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     // 물품 조회
     @Transactional(readOnly = true)
@@ -59,6 +57,7 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
+    // Entity to DTO
     private ProductResponseDto mapToResponseDto(Product product) {
         return new ProductResponseDto(
                 product.getId(),
