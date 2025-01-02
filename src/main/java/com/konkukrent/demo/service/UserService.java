@@ -7,7 +7,6 @@ import com.konkukrent.demo.dto.SignupResponse;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.entity.enums.Role;
 import com.konkukrent.demo.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
