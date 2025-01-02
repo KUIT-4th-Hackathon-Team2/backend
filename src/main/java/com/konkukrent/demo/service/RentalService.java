@@ -5,11 +5,11 @@ import com.konkukrent.demo.dto.RentalDto.RentalResponseDto;
 import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
 import com.konkukrent.demo.entity.Rental;
 import com.konkukrent.demo.repository.RentalRepository;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,16 +25,19 @@ public class RentalService {
     }
 
     // 모든 대여 내역 조회
+    @Transactional(readOnly = true)
     public List<RentalResponseDto> getAllRentals(){
         return rentalRepository.findAll().stream().map(this::mapToResponseDTO).collect(Collectors.toList());
     }
 
     // 사용자 별 대여 내역 조회
+    @Transactional(readOnly = true)
     public List<UserRentalResponseDto> getRentalsByUserId(Long userId){
         return rentalRepository.findByUserId(userId).stream().map(this::mapToUserRentalResponseDTO).collect(Collectors.toList());
     }
 
     // 물품 대여
+    @Transactional
     public RentalResponseDto createRental(RentalRequestDto request){
 
         // todo : product, user repository 에서 id로 객체 조회
@@ -44,7 +47,7 @@ public class RentalService {
         Rental rental = new Rental();
         // rental.setProduct(product);
         // rental.setUser(user);
-        rental.setRentalTime(Instant.now());
+        rental.setRentalTime(LocalDateTime.now());
 
         // todo : Instant.now() + product 의 rentalPeriod
         // rental.setExpirationDate(Instant.now().plusSeconds());
@@ -53,6 +56,7 @@ public class RentalService {
     }
 
     // 물품 반납
+    @Transactional
     public void deleteRental(Long rentalId){
         rentalRepository.deleteById(rentalId);
     }

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rentals")
@@ -18,10 +18,10 @@ public class Rental {
     private Long rentalId;
 
     @Column(nullable = false)
-    private Instant rentalTime;
+    private LocalDateTime rentalTime;
 
     @Column(nullable = false)
-    private Instant expirationDate;
+    private LocalDateTime expirationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

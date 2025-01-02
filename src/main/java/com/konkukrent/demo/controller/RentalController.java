@@ -4,6 +4,7 @@ import com.konkukrent.demo.dto.RentalDto.RentalRequestDto;
 import com.konkukrent.demo.dto.RentalDto.RentalResponseDto;
 import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
 import com.konkukrent.demo.service.RentalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,6 @@ public class RentalController {
     @DeleteMapping("/{rentalId}")
     public ResponseEntity<Void> deleteRental(@PathVariable Long rentalId) {
         rentalService.deleteRental(rentalId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
