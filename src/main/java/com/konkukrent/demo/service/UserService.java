@@ -2,7 +2,6 @@ package com.konkukrent.demo.service;
 
 import com.konkukrent.demo.dto.LoginRequest;
 import com.konkukrent.demo.dto.LoginResponse;
-import com.konkukrent.demo.dto.SignupRequest;
 import com.konkukrent.demo.dto.SignupResponse;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.entity.enums.Role;
@@ -24,7 +23,7 @@ public class UserService {
                                        String password,
                                        String role) {
         User newUser = User.builder()
-                .userName(userName)
+                .name(userName)
                 .password(password)
                 .studentNum(studentNum)
                 .role(Role.valueOf(role))
@@ -33,7 +32,7 @@ public class UserService {
 
         return SignupResponse.builder()
                 .userId(savedUser.getId())
-                .userName(savedUser.getUserName())
+                .userName(savedUser.getName())
                 .studentNum(savedUser.getStudentNum())
                 .role(String.valueOf(savedUser.getRole()))
                 .build();
@@ -45,7 +44,7 @@ public class UserService {
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> LoginResponse.builder()
                         .userId(user.getId())
-                        .userName(user.getUserName())
+                        .userName(user.getName())
                         .studentNum(user.getStudentNum())
                         .role(String.valueOf(user.getRole()))
                         .build())
