@@ -3,10 +3,8 @@ package com.konkukrent.demo.dto;
 import lombok.Getter;
 
 @Getter
-public class UserRequestDto {
+public class LoginRequest {
 
-        private String userName;
         private int studentNum;
         private String password;
-        private String role;
 }

@@ -1,15 +1,15 @@
 package com.konkukrent.demo.controller;
 
-import com.konkukrent.demo.entity.User;
+import com.konkukrent.demo.dto.SignupRequest;
+import com.konkukrent.demo.dto.SignupResponse;
 import com.konkukrent.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.konkukrent.demo.dto.LoginRequest;
+import com.konkukrent.demo.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,22 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
 
     private final UserService userService;
-    private final SessionManager sessionManager;
-
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@ModelAttribute User newUser) {
-        SignupResponse response = userService.createUser();
+    public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest signupRequest) {
+        SignupResponse response = userService.registerUser(signupRequest.getUserName(), signupRequest.getStudentNum(),
+                signupRequest.getPassword(), signupRequest.getRole());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse response = userService.authenticateUser(loginRequest);
+        LoginResponse response = userService.validateUser(loginRequest);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<LoginResponse> logout(@CookieValue(name = "sessionId", required = false) String sessionId) {
     }
 }

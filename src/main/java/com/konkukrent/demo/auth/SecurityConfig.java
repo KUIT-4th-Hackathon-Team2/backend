@@ -14,10 +14,15 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/users/login", "/users/signup").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(login -> login.disable());
+                .formLogin(form -> form
+                        .loginPage("/login") // 커스텀 로그인 페이지
+                        .defaultSuccessUrl("/home", true) // 로그인 성공 시 리다이렉트
+                        .failureUrl("/login?error=true") // 로그인 실패 시 리다이렉트
+                )
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }
