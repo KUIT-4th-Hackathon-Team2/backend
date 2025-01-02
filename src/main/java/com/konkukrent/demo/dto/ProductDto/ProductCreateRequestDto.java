@@ -1,12 +1,9 @@
 package com.konkukrent.demo.dto.ProductDto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreateRequestDto {
 
@@ -18,4 +15,5 @@ public class ProductCreateRequestDto {
 
     @NotNull
     private int rentalPeriod;
+
 }
