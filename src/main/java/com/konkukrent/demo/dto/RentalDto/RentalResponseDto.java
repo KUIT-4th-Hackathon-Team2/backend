@@ -16,7 +16,7 @@ public class RentalResponseDto {
     private String productName;
     private Long userId;
     private String userName;
-    private int studentNum;
+    private Long studentNum;
     private LocalDateTime rentalTime;
     private LocalDate expirationDate;
 }

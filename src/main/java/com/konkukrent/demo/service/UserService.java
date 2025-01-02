@@ -21,7 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public SignupResponse registerUser(String userName,
-                                       int studentNum,
+                                       Long studentNum,
                                        String password,
                                        String role) {
         User newUser = User.builder()
