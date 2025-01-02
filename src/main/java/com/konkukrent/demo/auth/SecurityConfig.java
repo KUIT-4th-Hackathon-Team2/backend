@@ -1,3 +1,4 @@
+/*
 package com.konkukrent.demo.auth;
 
 import org.springframework.context.annotation.Bean;
@@ -27,3 +28,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+*/
