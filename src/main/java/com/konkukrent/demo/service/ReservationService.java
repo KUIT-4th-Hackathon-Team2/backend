@@ -2,8 +2,10 @@ package com.konkukrent.demo.service;
 
 import com.konkukrent.demo.dto.ReservationRequestDto;
 import com.konkukrent.demo.dto.ReservationResponseDto;
+import com.konkukrent.demo.entity.Product;
 import com.konkukrent.demo.entity.Reservation;
 import com.konkukrent.demo.entity.User;
+import com.konkukrent.demo.repository.ProductRepository;
 import com.konkukrent.demo.repository.ReservationRepository;
 import com.konkukrent.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +44,10 @@ public class ReservationService {
     // TODO: user, product Null 예외 처리 필요
     @Transactional
     public ReservationResponseDto createReservation(ReservationRequestDto reservationRequestDto) {
-        User user = userRepository.getUserById(reservationRequestDto.getUserId());
-        Product product = productRepository.getProductById(reservationRequestDto.getProductId());
+        User user = userRepository.findById(reservationRequestDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Product product = productRepository.findById(reservationRequestDto.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Reservation reservation = new Reservation(user, product);
         Reservation saved = reservationRepository.save(reservation);

@@ -10,6 +10,6 @@ import lombok.*;
 public class LoginResponse {
     private Long userId;
     private String userName;
-    private int studentNum;
+    private Long studentNum;
     private String role;
 }

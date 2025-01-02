@@ -2,12 +2,10 @@ package com.konkukrent.demo.service;
 
 import com.konkukrent.demo.dto.LoginRequest;
 import com.konkukrent.demo.dto.LoginResponse;
-import com.konkukrent.demo.dto.SignupRequest;
 import com.konkukrent.demo.dto.SignupResponse;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.entity.enums.Role;
 import com.konkukrent.demo.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +19,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     public SignupResponse registerUser(String userName,
-                                       int studentNum,
+                                       Long studentNum,
                                        String password,
                                        String role) {
         User newUser = User.builder()
-                .userName(userName)
+                .name(userName)
                 .password(password)
                 .studentNum(studentNum)
                 .role(Role.valueOf(role))
@@ -34,22 +32,23 @@ public class UserService {
 
         return SignupResponse.builder()
                 .userId(savedUser.getId())
-                .userName(savedUser.getUserName())
+                .userName(savedUser.getName())
                 .studentNum(savedUser.getStudentNum())
                 .role(String.valueOf(savedUser.getRole()))
                 .build();
     }
 
+    // TODO: 로그인 실패 시 오류 커스텀
     public LoginResponse validateUser(LoginRequest loginRequest) {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> LoginResponse.builder()
                         .userId(user.getId())
-                        .userName(user.getUserName())
+                        .userName(user.getName())
                         .studentNum(user.getStudentNum())
                         .role(String.valueOf(user.getRole()))
                         .build())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
     }
 
     /*public User findUserById(Long id) {

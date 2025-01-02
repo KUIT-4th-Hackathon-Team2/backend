@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class LoginRequest {
 
-        private int studentNum;
+        private Long studentNum;
         private String password;
 }
