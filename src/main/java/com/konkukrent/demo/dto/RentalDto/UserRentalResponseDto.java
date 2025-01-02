@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,5 +16,5 @@ public class UserRentalResponseDto {
     private Long productId;
     private String productName;
     private LocalDateTime rentalTime;
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
 }

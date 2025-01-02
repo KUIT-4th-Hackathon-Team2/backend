@@ -25,8 +25,8 @@ public class RentalController {
         return ResponseEntity.ok(rentalService.getAllRentals());
     }
 
-    @GetMapping(params = "userId")
-    public ResponseEntity<List<UserRentalResponseDto>> getRentalsByUserId(@RequestParam Long userId) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<UserRentalResponseDto>> getRentalsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(rentalService.getRentalsByUserId(userId));
     }
 

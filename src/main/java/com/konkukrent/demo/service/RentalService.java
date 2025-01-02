@@ -49,8 +49,8 @@ public class RentalService {
         // rental.setUser(user);
         rental.setRentalTime(LocalDateTime.now());
 
-        // todo : Instant.now() + product 의 rentalPeriod
-        // rental.setExpirationDate(Instant.now().plusSeconds());
+        // todo : LocalDateTime.now() + product 의 rentalPeriod
+        // rental.setExpirationDate(LocalDateTime.now().plusSeconds());
         Rental savedRental = rentalRepository.save(rental);
         return mapToResponseDTO(savedRental);
     }
