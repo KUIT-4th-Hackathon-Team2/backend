@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@Getter
-@Setter
 public class RentalResponseDto {
     private Long rentalId;
     private Long productId;
