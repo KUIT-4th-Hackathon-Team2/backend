@@ -1,10 +1,12 @@
 package com.konkukrent.demo.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
 public class ReservationResponseDto {
     private Long reservationId;
 
