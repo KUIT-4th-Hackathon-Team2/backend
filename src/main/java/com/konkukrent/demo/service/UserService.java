@@ -9,6 +9,7 @@ import com.konkukrent.demo.exception.UserException;
 import com.konkukrent.demo.exception.properties.ErrorCode;
 import com.konkukrent.demo.repository.UserRepository;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     public SignupResponse registerUser(String userName,
                                        Long studentNum,
@@ -44,15 +46,24 @@ public class UserService {
     }
 
     // TODO: 로그인 실패 시 오류 커스텀
-    public LoginResponse validateUser(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest) {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
-                .map(user -> LoginResponse.builder()
-                        .userId(user.getId())
-                        .userName(user.getName())
-                        .studentNum(user.getStudentNum())
-                        .role(String.valueOf(user.getRole()))
-                        .build())
+                .map(user -> {
+                    // 세션에 사용자 정보 저장
+                    httpSession.setAttribute("loginUser", LoginResponse.builder()
+                            .userId(user.getId())
+                            .userName(user.getName())
+                            .studentNum(user.getStudentNum())
+                            .role(String.valueOf(user.getRole()))
+                            .build());
+                    return LoginResponse.builder()
+                            .userId(user.getId())
+                            .userName(user.getName())
+                            .studentNum(user.getStudentNum())
+                            .role(String.valueOf(user.getRole()))
+                            .build();
+                })
                 .orElseThrow(() -> new UserException(ErrorCode.LOGIN_FAIL));
     }
 
