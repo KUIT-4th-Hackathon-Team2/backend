@@ -40,6 +40,8 @@ public class RentalService {
     }
 
     // 물품 대여
+    // todo 예외 처리 remainNumber <= 0
+    // todo 같은 사용자의 중복 물품 대여
     @Transactional
     public RentalResponseDto createRental(RentalRequestDto request){
 
@@ -53,6 +55,8 @@ public class RentalService {
         rental.setUser(user);
         rental.setRentalTime(LocalDateTime.now());
         rental.setExpirationDate(LocalDate.now().plusDays(product.getRentalPeriod()));
+
+        product.setRemainNumber(product.getRemainNumber() - 1);
         Rental savedRental = rentalRepository.save(rental);
 
         return mapToResponseDTO(savedRental);
@@ -61,6 +65,8 @@ public class RentalService {
     // 물품 반납
     @Transactional
     public void deleteRental(Long rentalId){
+        Product product = rentalRepository.getReferenceById(rentalId).getProduct();
+        product.setRemainNumber(product.getRemainNumber() + 1);
         rentalRepository.deleteById(rentalId);
     }
 
