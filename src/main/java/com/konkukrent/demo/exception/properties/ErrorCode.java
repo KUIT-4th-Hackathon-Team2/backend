@@ -17,8 +17,10 @@ public enum ErrorCode {
     SESSION_EXPIRED(UNAUTHORIZED, "세션이 만료되었습니다."),
 
     //404
-    RESERVATION_NOT_FOUND(NOT_FOUND, "reservation을 찾을 수 없습니다."),
-    RENTAL_NOT_FOUND(NOT_FOUND, "renatl을 찾을 수 없습니다."),
+    RESERVATION_NOT_FOUND(NOT_FOUND, "예약이 존재하지 않습니다."),
+    RENTAL_NOT_FOUND(NOT_FOUND, "대여 내역이 존재하지 않습니다."),
+    PRODUCT_NOT_FOUND(NOT_FOUND, "해당 물품이 존재하지 않습니다."),
+    USER_NOT_FOUND(NOT_FOUND, "해당 유저가 존재하지 않습니다."),
 
     // 409
     STUDENT_NUM_ALREADY(CONFLICT, "이미 해당 학번의 학생이 존재합니다."),

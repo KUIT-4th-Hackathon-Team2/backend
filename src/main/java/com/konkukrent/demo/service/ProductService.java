@@ -4,6 +4,7 @@ import com.konkukrent.demo.dto.ProductDto.ProductCreateRequestDto;
 import com.konkukrent.demo.dto.ProductDto.ProductResponseDto;
 import com.konkukrent.demo.dto.ProductDto.ProductUpdateRequestDto;
 import com.konkukrent.demo.entity.Product;
+import com.konkukrent.demo.exception.exceptionClass.CustomException;
 import com.konkukrent.demo.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.konkukrent.demo.exception.properties.ErrorCode.PRODUCT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +46,7 @@ public class ProductService {
     public ProductResponseDto updateProduct(Long productId, ProductUpdateRequestDto request) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Product not found");
+            throw new CustomException(PRODUCT_NOT_FOUND);
         }
         Product product = optionalProduct.get();
         if (request.getName() != null) {
@@ -65,6 +68,10 @@ public class ProductService {
     // 물품 삭제
     @Transactional
     public void deleteProduct(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isEmpty()) {
+            throw new CustomException(PRODUCT_NOT_FOUND);
+        }
         productRepository.deleteById(productId);
     }
 
