@@ -79,7 +79,9 @@ public class UserController {
             description = "로그아웃에 성공하였습니다."
     )
     @PostMapping("/logout")
+  
     public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest, HttpSession session) {
+
         userService.logout(logoutRequest.getStudentNum(), session);
         return ResponseEntity.noContent().build(); // 204 No Content 응답
     }
