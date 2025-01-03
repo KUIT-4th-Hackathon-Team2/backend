@@ -3,8 +3,10 @@ package com.konkukrent.demo.service;
 import com.konkukrent.demo.dto.ReservationRequestDto;
 import com.konkukrent.demo.dto.ReservationResponseDto;
 import com.konkukrent.demo.entity.Product;
+import com.konkukrent.demo.entity.Rental;
 import com.konkukrent.demo.entity.Reservation;
 import com.konkukrent.demo.entity.User;
+import com.konkukrent.demo.exception.exceptionClass.CustomException;
 import com.konkukrent.demo.repository.ProductRepository;
 import com.konkukrent.demo.repository.ReservationRepository;
 import com.konkukrent.demo.repository.UserRepository;
@@ -13,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.konkukrent.demo.exception.properties.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,22 +46,24 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: user, product Null 예외 처리 필요
     @Transactional
     public ReservationResponseDto createReservation(ReservationRequestDto reservationRequestDto) {
         User user = userRepository.findById(reservationRequestDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Product product = productRepository.findById(reservationRequestDto.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new CustomException(PRODUCT_NOT_FOUND));
 
         Reservation reservation = new Reservation(user, product);
         Reservation saved = reservationRepository.save(reservation);
         return entityToDto(saved);
     }
 
-    // TODO: reservation이 존재하지 않을 경우 예외 처리 필요
     @Transactional
     public void deleteReservation(Long reservationId) {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);
+        if (optionalReservation.isEmpty()) {
+            throw new CustomException(RESERVATION_NOT_FOUND);
+        }
         reservationRepository.deleteById(reservationId);
     }
 
