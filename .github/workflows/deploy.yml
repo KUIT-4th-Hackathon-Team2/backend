@@ -13,55 +13,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
+      # 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. JDK 설정
+      # JDK 설정
       - name: ☕️ set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      # 3. Maven 빌드
+      # DockerHub 로그인
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Maven 빌드
       - name: Build JAR File
         run: |
           mvn clean package
         env:
             SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
             SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
-            SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }
+            SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
 
-      # 4. Docker 이미지 빌드
-      - name: Build Docker Image
+      # Docker 이미지 빌드
+      - name: Build and Push Docker Image
         run: |
-          docker build -t demo .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/demo:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/demo:latest
 
-      # 5. Docker 이미지 저장
-      - name: Save Docker Image as TAR
-        run: |
-          docker save demo > demo.tar
-
-      # 6. EC2에 Docker 이미지 전송
-      - name: Copy Docker Image to EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          source: demo.tar
-          target: ~/demo.tar
-
-      # 7. EC2에서 컨테이너 실행
-      - name: Deploy on EC2
+      # EC2에 배포
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker load < ~/demo.tar
-            docker stop my-spring-container || true
-            docker rm my-spring-container || true
-            docker run -d -p 8080:8080 --name my-spring-container demo
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/demo:latest
+            sudo docker stop my-spring-container || true
+            sudo docker rm my-spring-container || true
+            sudo docker run -d -p 8080:8080 --name my-spring-container ${{ secrets.DOCKER_USERNAME }}/demo:latest
