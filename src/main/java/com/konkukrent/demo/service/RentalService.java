@@ -5,10 +5,12 @@ import com.konkukrent.demo.dto.RentalDto.RentalResponseDto;
 import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
 import com.konkukrent.demo.entity.Product;
 import com.konkukrent.demo.entity.Rental;
+import com.konkukrent.demo.entity.Reservation;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.exception.exceptionClass.CustomException;
 import com.konkukrent.demo.repository.ProductRepository;
 import com.konkukrent.demo.repository.RentalRepository;
+import com.konkukrent.demo.repository.ReservationRepository;
 import com.konkukrent.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class RentalService {
     private final RentalRepository rentalRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final ReservationRepository reservationRepository;
 
     // 모든 대여 내역 조회
     @Transactional(readOnly = true)
@@ -47,10 +50,15 @@ public class RentalService {
     @Transactional
     public RentalResponseDto createRental(RentalRequestDto request){
 
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new CustomException(PRODUCT_NOT_FOUND));
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Reservation reservation = reservationRepository.findById(request.getReservationId())
+                .orElseThrow(() -> new CustomException(RESERVATION_NOT_FOUND));
+
+        Product product = reservation.getProduct();
+        if(product == null)
+            throw new CustomException(PRODUCT_NOT_FOUND);
+        User user = reservation.getUser();
+        if(user == null)
+            throw new CustomException(USER_NOT_FOUND);
 
         Rental rental = new Rental();
         rental.setProduct(product);
@@ -60,6 +68,8 @@ public class RentalService {
 
         product.setRemainNumber(product.getRemainNumber() - 1);
         Rental savedRental = rentalRepository.save(rental);
+
+        reservationRepository.delete(reservation);
 
         return mapToResponseDTO(savedRental);
     }
