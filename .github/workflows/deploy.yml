@@ -17,17 +17,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Docker 이미지 빌드
+      # 2. Maven 빌드
+      - name: Build JAR File
+        run: |
+          mvn clean package
+
+      # 3. Docker 이미지 빌드
       - name: Build Docker Image
         run: |
           docker build -t demo .
 
-      # 3. Docker 이미지 저장
+      # 4. Docker 이미지 저장
       - name: Save Docker Image as TAR
         run: |
           docker save demo > demo.tar
 
-      # 4. EC2에 Docker 이미지 전송
+      # 5. EC2에 Docker 이미지 전송
       - name: Copy Docker Image to EC2
         uses: appleboy/scp-action@master
         with:
@@ -37,7 +42,7 @@ jobs:
           source: demo.tar
           target: ~/demo.tar
 
-      # 5. EC2에서 컨테이너 실행
+      # 6. EC2에서 컨테이너 실행
       - name: Deploy on EC2
         uses: appleboy/ssh-action@master
         with:
