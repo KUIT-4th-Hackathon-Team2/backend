@@ -8,6 +8,9 @@ import lombok.Setter;
 @Data
 public class RentalRequestDto {
     @NotNull
+    private Long reservationId;
+
+    @NotNull
     private Long productId;
 
     @NotNull
