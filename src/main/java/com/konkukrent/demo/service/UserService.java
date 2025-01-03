@@ -61,6 +61,12 @@ public class UserService {
         if (!userRepository.existsByStudentNum(studentNum)) {
             throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
-        session.invalidate();
+
+        if(session.getAttribute("loginUser") != null) {
+            session.invalidate();
+        }
+        else{
+            throw new UserException(ErrorCode.SESSION_INVALID);
+        }
     }
 }
