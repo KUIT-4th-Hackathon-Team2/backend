@@ -1,8 +1,6 @@
 package com.konkukrent.demo.service;
 
-import com.konkukrent.demo.dto.LoginRequest;
-import com.konkukrent.demo.dto.LoginResponse;
-import com.konkukrent.demo.dto.SignupResponse;
+import com.konkukrent.demo.dto.*;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.entity.enums.Role;
 import com.konkukrent.demo.exception.UserException;
@@ -28,48 +26,41 @@ public class UserService {
                                        Long studentNum,
                                        String password,
                                        String role) {
-        log.info("registerUser");
+
+        // 이미 존재하는 학번인지 확인
+        if (userRepository.existsByStudentNum(studentNum)) {
+            throw new UserException(ErrorCode.STUDENT_NUM_ALREADY);
+        }
+
         User newUser = User.builder()
                 .name(userName)
-                .password(password)
+                .password(password) // 비밀번호 암호화
                 .studentNum(studentNum)
                 .role(Role.valueOf(role))
                 .build();
+
         User savedUser = userRepository.save(newUser);
 
-        return SignupResponse.builder()
-                .userId(savedUser.getId())
-                .userName(savedUser.getName())
-                .studentNum(savedUser.getStudentNum())
-                .role(String.valueOf(savedUser.getRole()))
-                .build();
+        return SignupResponse.from(savedUser); // 정적 팩토리 메서드 활용
     }
 
-    // TODO: 로그인 실패 시 오류 커스텀
     public LoginResponse login(LoginRequest loginRequest) {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> {
-                    // 세션에 사용자 정보 저장
-                    httpSession.setAttribute("loginUser", LoginResponse.builder()
-                            .userId(user.getId())
-                            .userName(user.getName())
-                            .studentNum(user.getStudentNum())
-                            .role(String.valueOf(user.getRole()))
-                            .build());
-                    return LoginResponse.builder()
-                            .userId(user.getId())
-                            .userName(user.getName())
-                            .studentNum(user.getStudentNum())
-                            .role(String.valueOf(user.getRole()))
-                            .build();
+                    LoginResponse loginResponse = LoginResponse.from(user);
+                    httpSession.setAttribute("loginUser", loginResponse);
+                    httpSession.setMaxInactiveInterval(3600); // 1시간 설정
+                    return loginResponse;
                 })
                 .orElseThrow(() -> new UserException(ErrorCode.LOGIN_FAIL));
     }
 
-    /*public User findUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
-        return user;
+    /*public void logout(LogoutRequest logoutRequest) {
+
+        HttpSession session = logoutRequest.getSession();
+        if (UserSessionUtils.isLoggedIn(session)) {
+            session.invalidate();
+        }
     }*/
 }

@@ -20,6 +20,9 @@ public enum ErrorCode {
     RESERVATION_NOT_FOUND(NOT_FOUND, "reservation을 찾을 수 없습니다."),
     RENTAL_NOT_FOUND(NOT_FOUND, "renatl을 찾을 수 없습니다."),
 
+    // 409
+    STUDENT_NUM_ALREADY(CONFLICT, "이미 해당 학번의 학생이 존재합니다."),
+
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");
 
