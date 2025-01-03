@@ -27,10 +27,11 @@ jobs:
       # 3. Maven 빌드
       - name: Build JAR File
         run: |
-          SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }} \
-          SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }} \
-          SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }} \
           mvn clean package
+        env:
+            SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
+            SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+            SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }
 
       # 4. Docker 이미지 빌드
       - name: Build Docker Image
