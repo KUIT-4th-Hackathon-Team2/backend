@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
-                .excludePathPatterns("/users/login", "/users/signup"); // 로그인, 회원가입 경로는 제외
+                .addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용"
+                .excludePathPatterns("/users/login", "/users/signup", "/swagger-ui/**", "/v3/api-docs/**"); // 로그인, 회원가입 경로는 제외
     }
 }
