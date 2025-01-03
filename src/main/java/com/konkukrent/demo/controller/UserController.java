@@ -3,15 +3,14 @@ package com.konkukrent.demo.controller;
 import com.konkukrent.demo.dto.*;
 import com.konkukrent.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +38,8 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "이미 해당 학번의 학생이 존재합니다."
+                    description = "이미 해당 학번의 학생이 존재합니다.",
+                    content = @Content()
             ),
     })
     @PostMapping("/signup")
@@ -60,7 +60,8 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "로그인에 실패했습니다."
+                    description = "로그인에 실패했습니다.",
+                    content = @Content()
             ),
     })
     @PostMapping("/login")
