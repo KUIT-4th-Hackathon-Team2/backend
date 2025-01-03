@@ -38,6 +38,14 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "로그인",
+            description = "로그인합니다."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "로그인에 성공하였습니다."
+    )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse response = userService.login(loginRequest);
