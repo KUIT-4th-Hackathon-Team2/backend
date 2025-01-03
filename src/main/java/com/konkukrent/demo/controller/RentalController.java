@@ -62,12 +62,7 @@ public class RentalController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 물품이 존재하지 않습니다.",
-                    content = @Content()
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "해당 유저가 존재하지 않습니다.",
+                    description = "예약이 존재하지 않습니다.",
                     content = @Content()
             )
     })
