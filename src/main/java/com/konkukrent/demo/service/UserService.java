@@ -5,12 +5,16 @@ import com.konkukrent.demo.dto.LoginResponse;
 import com.konkukrent.demo.dto.SignupResponse;
 import com.konkukrent.demo.entity.User;
 import com.konkukrent.demo.entity.enums.Role;
+import com.konkukrent.demo.exception.UserException;
+import com.konkukrent.demo.exception.properties.ErrorCode;
 import com.konkukrent.demo.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,6 +26,7 @@ public class UserService {
                                        Long studentNum,
                                        String password,
                                        String role) {
+        log.info("registerUser");
         User newUser = User.builder()
                 .name(userName)
                 .password(password)
@@ -48,7 +53,7 @@ public class UserService {
                         .studentNum(user.getStudentNum())
                         .role(String.valueOf(user.getRole()))
                         .build())
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+                .orElseThrow(() -> new UserException(ErrorCode.LOGIN_FAIL));
     }
 
     /*public User findUserById(Long id) {
