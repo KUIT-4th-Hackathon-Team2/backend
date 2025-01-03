@@ -52,9 +52,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest) {
-        userService.logout(logoutRequest);
-        return ResponseEntity.noContent().build();
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest) {
+//        userService.logout(logoutRequest);
+//        return ResponseEntity.noContent().build();
+//    }
 }
