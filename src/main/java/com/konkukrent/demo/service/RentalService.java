@@ -6,6 +6,7 @@ import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
 import com.konkukrent.demo.entity.Product;
 import com.konkukrent.demo.entity.Rental;
 import com.konkukrent.demo.entity.User;
+import com.konkukrent.demo.exception.exceptionClass.CustomException;
 import com.konkukrent.demo.repository.ProductRepository;
 import com.konkukrent.demo.repository.RentalRepository;
 import com.konkukrent.demo.repository.UserRepository;
@@ -17,7 +18,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.konkukrent.demo.exception.properties.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,15 +44,13 @@ public class RentalService {
     }
 
     // 물품 대여
-    // todo 예외 처리 remainNumber <= 0
-    // todo 같은 사용자의 중복 물품 대여
     @Transactional
     public RentalResponseDto createRental(RentalRequestDto request){
 
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + request.getProductId()));
+                .orElseThrow(() -> new CustomException(PRODUCT_NOT_FOUND));
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + request.getUserId()));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         Rental rental = new Rental();
         rental.setProduct(product);
@@ -65,7 +67,11 @@ public class RentalService {
     // 물품 반납
     @Transactional
     public void deleteRental(Long rentalId){
-        Product product = rentalRepository.getReferenceById(rentalId).getProduct();
+        Optional<Rental> optionalRental = rentalRepository.findById(rentalId);
+        if (optionalRental.isEmpty()) {
+            throw new CustomException(RENTAL_NOT_FOUND);
+        }
+        Product product = optionalRental.get().getProduct();
         product.setRemainNumber(product.getRemainNumber() + 1);
         rentalRepository.deleteById(rentalId);
     }
