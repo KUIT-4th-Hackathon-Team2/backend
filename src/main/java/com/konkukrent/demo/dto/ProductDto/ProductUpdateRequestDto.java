@@ -1,6 +1,7 @@
 package com.konkukrent.demo.dto.ProductDto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductUpdateRequestDto {
 
-    @NotNull
-    private int remainNumber;
+    private String name;
+    private Integer totalNumber;
+    private Integer remainNumber;
+    private Integer rentalPeriod;
 }

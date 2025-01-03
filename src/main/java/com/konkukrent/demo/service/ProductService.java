@@ -46,7 +46,18 @@ public class ProductService {
             throw new RuntimeException("Product not found");
         }
         Product product = optionalProduct.get();
-        product.setRemainNumber(request.getRemainNumber());
+        if (request.getName() != null) {
+            product.setName(request.getName());
+        }
+        if (request.getTotalNumber() != null) {
+            product.setTotalNumber(request.getTotalNumber());
+        }
+        if (request.getRemainNumber() != null) {
+            product.setRemainNumber(request.getRemainNumber());
+        }
+        if (request.getRentalPeriod() != null) {
+            product.setRentalPeriod(request.getRentalPeriod());
+        }
         Product updatedProduct = productRepository.save(product);
         return mapToResponseDto(updatedProduct);
     }
