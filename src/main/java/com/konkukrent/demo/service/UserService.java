@@ -50,7 +50,7 @@ public class UserService {
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> {
                     String sessionId = session.getId();
-                    System.out.println("JSESSIONID: " + sessionId);
+                    System.out.println(loginRequest.getStudentNum() + ":" + sessionId);
 
                     LoginResponse loginResponse = LoginResponse.from(user);
                     session.setAttribute("loginUser", loginResponse);
