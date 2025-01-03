@@ -28,21 +28,22 @@ public class UserService {
                                        Long studentNum,
                                        String password,
                                        String role) {
-        log.info("registerUser");
+
+        // 이미 존재하는 학번인지 확인
+        if (userRepository.existsByStudentNum(studentNum)) {
+            throw new UserException(ErrorCode.STUDENT_NUM_ALREADY);
+        }
+
         User newUser = User.builder()
                 .name(userName)
-                .password(password)
+                .password(password) // 비밀번호 암호화
                 .studentNum(studentNum)
                 .role(Role.valueOf(role))
                 .build();
+
         User savedUser = userRepository.save(newUser);
 
-        return SignupResponse.builder()
-                .userId(savedUser.getId())
-                .userName(savedUser.getName())
-                .studentNum(savedUser.getStudentNum())
-                .role(String.valueOf(savedUser.getRole()))
-                .build();
+        return SignupResponse.from(savedUser); // 정적 팩토리 메서드 활용
     }
 
     // TODO: 로그인 실패 시 오류 커스텀
@@ -57,12 +58,7 @@ public class UserService {
                             .studentNum(user.getStudentNum())
                             .role(String.valueOf(user.getRole()))
                             .build());
-                    return LoginResponse.builder()
-                            .userId(user.getId())
-                            .userName(user.getName())
-                            .studentNum(user.getStudentNum())
-                            .role(String.valueOf(user.getRole()))
-                            .build();
+                    return LoginResponse.from(user);
                 })
                 .orElseThrow(() -> new UserException(ErrorCode.LOGIN_FAIL));
     }
