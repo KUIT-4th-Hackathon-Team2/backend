@@ -3,13 +3,14 @@ package com.konkukrent.demo.controller;
 import com.konkukrent.demo.dto.*;
 import com.konkukrent.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,8 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "이미 해당 학번의 학생이 존재합니다."
+                    description = "이미 해당 학번의 학생이 존재합니다.",
+                    content = @Content()
             ),
     })
     @PostMapping("/signup")
@@ -58,18 +60,28 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "로그인에 실패했습니다."
+                    description = "로그인에 실패했습니다.",
+                    content = @Content()
             ),
     })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse response = userService.login(loginRequest);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+        LoginResponse response = userService.login(loginRequest, session);
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest) {
-//        userService.logout(logoutRequest);
-//        return ResponseEntity.noContent().build();
-//    }
+    @Operation(
+            summary = "로그아웃",
+            description = "로그아웃합니다."
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "로그아웃에 성공하였습니다."
+    )
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LoginRequest logoutRequest, HttpSession session) {
+        userService.logout(logoutRequest.getStudentNum(), session);
+        return ResponseEntity.noContent().build(); // 204 No Content 응답
+    }
 }
+

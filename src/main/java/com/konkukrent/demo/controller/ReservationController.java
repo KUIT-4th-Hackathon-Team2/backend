@@ -2,15 +2,14 @@ package com.konkukrent.demo.controller;
 
 import com.konkukrent.demo.dto.ReservationRequestDto;
 import com.konkukrent.demo.dto.ReservationResponseDto;
-import com.konkukrent.demo.entity.Reservation;
 import com.konkukrent.demo.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,11 +58,13 @@ public class ReservationController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 물품이 존재하지 않습니다."
+                    description = "해당 물품이 존재하지 않습니다.",
+                    content = @Content()
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 유저가 존재하지 않습니다."
+                    description = "해당 유저가 존재하지 않습니다.",
+                    content = @Content()
             )
     })
     @PostMapping
@@ -82,7 +83,8 @@ public class ReservationController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "예약이 존재하지 않습니다."
+                    description = "예약이 존재하지 않습니다.",
+                    content = @Content()
             ),
     })
     @DeleteMapping("/{reservationId}")

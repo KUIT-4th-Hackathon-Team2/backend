@@ -15,6 +15,7 @@ public enum ErrorCode {
     // 401
     LOGIN_FAIL(UNAUTHORIZED, "로그인에 실패했습니다."),
     SESSION_EXPIRED(UNAUTHORIZED, "세션이 만료되었습니다."),
+    SESSION_INVALID(UNAUTHORIZED,"사용자가 로그인 상태가 아닙니다."),
 
     //404
     RESERVATION_NOT_FOUND(NOT_FOUND, "예약이 존재하지 않습니다."),

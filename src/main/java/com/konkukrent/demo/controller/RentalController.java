@@ -5,10 +5,10 @@ import com.konkukrent.demo.dto.RentalDto.RentalResponseDto;
 import com.konkukrent.demo.dto.RentalDto.UserRentalResponseDto;
 import com.konkukrent.demo.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,11 +62,13 @@ public class RentalController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 물품이 존재하지 않습니다."
+                    description = "해당 물품이 존재하지 않습니다.",
+                    content = @Content()
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 유저가 존재하지 않습니다."
+                    description = "해당 유저가 존재하지 않습니다.",
+                    content = @Content()
             )
     })
     @PostMapping
@@ -86,7 +88,8 @@ public class RentalController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "대여 내역이 존재하지 않습니다."
+                    description = "대여 내역이 존재하지 않습니다.",
+                    content = @Content()
             ),
     })
     @DeleteMapping("/{rentalId}")
