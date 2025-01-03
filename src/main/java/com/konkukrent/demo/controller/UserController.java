@@ -1,13 +1,10 @@
 package com.konkukrent.demo.controller;
 
-import com.konkukrent.demo.dto.SignupRequest;
-import com.konkukrent.demo.dto.SignupResponse;
+import com.konkukrent.demo.dto.*;
 import com.konkukrent.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.konkukrent.demo.dto.LoginRequest;
-import com.konkukrent.demo.dto.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -47,4 +44,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest) {
+        userService.logout(logoutRequest);
+        return ResponseEntity.noContent().build();
+    }
 }
