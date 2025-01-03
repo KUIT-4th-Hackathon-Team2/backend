@@ -5,6 +5,7 @@ import com.konkukrent.demo.dto.ProductDto.ProductResponseDto;
 import com.konkukrent.demo.dto.ProductDto.ProductUpdateRequestDto;
 import com.konkukrent.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,7 +66,8 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 물품이 존재하지 않습니다."
+                    description = "해당 물품이 존재하지 않습니다.",
+                    content = @Content()
             )
     })
     @PatchMapping("/{productId}")
@@ -86,7 +88,8 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "해당 물품이 존재하지 않습니다."
+                    description = "해당 물품이 존재하지 않습니다.",
+                    content = @Content()
             )
     })
     @DeleteMapping("/{productId}")
