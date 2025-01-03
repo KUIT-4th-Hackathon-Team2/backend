@@ -14,9 +14,11 @@ public enum ErrorCode {
 
     // 401
     LOGIN_FAIL(UNAUTHORIZED, "로그인에 실패했습니다."),
+    SESSION_EXPIRED(UNAUTHORIZED, "세션이 만료되었습니다."),
 
     //404
     RESERVATION_NOT_FOUND(NOT_FOUND, "reservation을 찾을 수 없습니다."),
+    RENTAL_NOT_FOUND(NOT_FOUND, "renatl을 찾을 수 없습니다."),
 
     // 500
     SERVER_ERROR(INTERNAL_SERVER_ERROR, "예상치 못한 서버 에러가 발생하였습니다.");
