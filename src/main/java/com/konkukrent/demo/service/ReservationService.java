@@ -46,7 +46,6 @@ public class ReservationService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: user, product Null 예외 처리 필요
     @Transactional
     public ReservationResponseDto createReservation(ReservationRequestDto reservationRequestDto) {
         User user = userRepository.findById(reservationRequestDto.getUserId())
@@ -59,7 +58,6 @@ public class ReservationService {
         return entityToDto(saved);
     }
 
-    // TODO: reservation이 존재하지 않을 경우 예외 처리 필요
     @Transactional
     public void deleteReservation(Long reservationId) {
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservationId);

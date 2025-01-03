@@ -6,6 +6,7 @@ import com.konkukrent.demo.entity.Reservation;
 import com.konkukrent.demo.service.ReservationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +52,20 @@ public class ReservationController {
             summary = "예약 생성",
             description = "물품 대여를 예약합니다."
     )
-    @ApiResponse(
-            responseCode = "201",
-            description = "물품 대여 예약에 성공하였습니다."
-    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "물품 대여 예약에 성공하였습니다."
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "해당 물품이 존재하지 않습니다."
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "해당 유저가 존재하지 않습니다."
+            )
+    })
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         return ResponseEntity.status(201).body(reservationService.createReservation(reservationRequestDto));
@@ -64,10 +75,16 @@ public class ReservationController {
             summary = "예약 취소",
             description = "물품 대여 예약을 취소합니다."
     )
-    @ApiResponse(
-            responseCode = "204",
-            description = "물품 대여 예약을 취소하였습니다."
-    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "물품 대여 예약을 취소하였습니다."
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "예약이 존재하지 않습니다."
+            ),
+    })
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
         reservationService.deleteReservation(reservationId);

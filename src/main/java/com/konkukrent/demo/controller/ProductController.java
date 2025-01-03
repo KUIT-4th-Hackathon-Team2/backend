@@ -6,6 +6,7 @@ import com.konkukrent.demo.dto.ProductDto.ProductUpdateRequestDto;
 import com.konkukrent.demo.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,16 @@ public class ProductController {
             responseCode = "200",
             description = "물품 세부사항이 수정되었습니다."
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "물품 세부사항이 수정되었습니다."
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "해당 물품이 존재하지 않습니다."
+            )
+    })
     @PatchMapping("/{productId}")
     public ResponseEntity<ProductResponseDto> updateProduct(
             @PathVariable Long productId,
@@ -68,10 +79,16 @@ public class ProductController {
             summary = "물품 삭제",
             description = "물품을 삭제합니다."
     )
-    @ApiResponse(
-            responseCode = "204",
-            description = "물품이 삭제되었습니다."
-    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "물품이 삭제되었습니다."
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "해당 물품이 존재하지 않습니다."
+            )
+    })
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
