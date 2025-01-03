@@ -49,6 +49,9 @@ public class UserService {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> {
+                    String sessionId = session.getId();
+                    System.out.println("JSESSIONID: " + sessionId);
+
                     LoginResponse loginResponse = LoginResponse.from(user);
                     session.setAttribute("loginUser", loginResponse);
                     session.setMaxInactiveInterval(3600);
