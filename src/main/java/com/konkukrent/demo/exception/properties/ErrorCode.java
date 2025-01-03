@@ -15,10 +15,12 @@ public enum ErrorCode {
     // 401
     LOGIN_FAIL(UNAUTHORIZED, "로그인에 실패했습니다."),
     SESSION_EXPIRED(UNAUTHORIZED, "세션이 만료되었습니다."),
+    SESSION_INVALID(UNAUTHORIZED,"사용자가 로그인 상태가 아닙니다."),
 
     //404
     RESERVATION_NOT_FOUND(NOT_FOUND, "reservation을 찾을 수 없습니다."),
     RENTAL_NOT_FOUND(NOT_FOUND, "renatl을 찾을 수 없습니다."),
+    USER_NOT_FOUND(NOT_FOUND, "해당 학생 번호를 가진 사용자가 존재하지 않습니다."),
 
     // 409
     STUDENT_NUM_ALREADY(CONFLICT, "이미 해당 학번의 학생이 존재합니다."),

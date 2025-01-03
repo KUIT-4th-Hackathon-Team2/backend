@@ -7,6 +7,7 @@ import com.konkukrent.demo.exception.UserException;
 import com.konkukrent.demo.exception.properties.ErrorCode;
 import com.konkukrent.demo.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,23 +45,22 @@ public class UserService {
         return SignupResponse.from(savedUser); // 정적 팩토리 메서드 활용
     }
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, HttpSession session) {
         return userRepository.findByStudentNum(loginRequest.getStudentNum())
                 .filter(user -> user.getPassword().equals(loginRequest.getPassword()))
                 .map(user -> {
                     LoginResponse loginResponse = LoginResponse.from(user);
-                    httpSession.setAttribute("loginUser", loginResponse);
-                    httpSession.setMaxInactiveInterval(3600); // 1시간 설정
+                    session.setAttribute("loginUser", loginResponse);
+                    session.setMaxInactiveInterval(3600);
                     return loginResponse;
                 })
                 .orElseThrow(() -> new UserException(ErrorCode.LOGIN_FAIL));
     }
 
-    /*public void logout(LogoutRequest logoutRequest) {
-
-        HttpSession session = logoutRequest.getSession();
-        if (UserSessionUtils.isLoggedIn(session)) {
-            session.invalidate();
+    public void logout(Long studentNum, HttpSession session) {
+        if (!userRepository.existsByStudentNum(studentNum)) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
         }
-    }*/
+        session.invalidate();
+    }
 }
